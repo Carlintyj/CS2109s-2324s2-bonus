@@ -12,8 +12,34 @@ from collections import defaultdict
 # Return the path found
 def uniform_cost_search(graph, inital_node, goal_test, is_tree, is_update):
 
-    # frontier = PriorityQueue('min')
-    raise NotImplementedError
+    frontier = PriorityQueue('min')
+    frontier.append((inital_node, ""), 0)
+
+    if is_tree:
+        while frontier.__len__ != 0:
+            node = frontier.pop()
+
+            if goal_test(node[1][0]):
+                return node[1][1] + str(node[1][0])
+
+            for neighbour in graph[node[1][0]]:
+                key, priority = neighbour
+                frontier.append((key, node[1][1] + str(node[1][0])), priority + node[0])
+    else:
+        visited = set()
+        while frontier.__len__ != 0:
+            node = frontier.pop()
+
+            if node[1][0] in visited:
+                continue
+            visited.add(node[1][0])
+
+            if goal_test(node[1][0]):
+                return node[1][1] + str(node[1][0])
+
+            for neighbour in graph[node[1][0]]:
+                key, priority = neighbour
+                frontier.append((key, node[1][1] + str(node[1][0])), priority + node[0])
 
 print("=====")
 print("Tree")
