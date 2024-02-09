@@ -14,11 +14,36 @@ graph = {
     'G': {('B',4)},
 }
 
-def astar(graph, inital_node, goal_test, heuristics, is_tree, is_update):
+def astar(graph, initial_node, goal_test, heuristics, is_tree, is_update):
     tree = Tree()
     priorityQueue = queue.PriorityQueue()
 
-    raise NotImplementedError
+    priorityQueue.put((0, (initial_node, [initial_node])))
+    tree.create_node(initial_node, initial_node)
+    if not is_tree:
+        visited = set()
+
+    path = []
+
+    while not priorityQueue.empty():
+        cost, (current_node, node_path) = priorityQueue.get()
+        cost -= heuristics[current_node]
+
+        if not is_tree:
+            if current_node in visited:
+                continue
+            else:
+                visited.add(current_node)
+
+        if goal_test(current_node):
+            path = node_path
+            break
+
+        for neighbour, weight in graph[current_node]:
+            f_n = cost + weight + heuristics[neighbour]
+            priorityQueue.put((f_n, (neighbour, node_path + [neighbour])))
+            if neighbour not in tree.nodes:
+                tree.create_node(neighbour, neighbour, parent=current_node, data=f_n)
 
     tree.save2file('astar.txt', line_type='ascii')
 
