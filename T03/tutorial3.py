@@ -1,4 +1,4 @@
-import numpy as np
+##import numpy as np
 
 class State:
     def __init__(self, val, is_max_player=False, children=[]):
@@ -13,13 +13,29 @@ class State:
     def is_terminal(self):
         return len(self.children) == 0
     
-def alpha_beta_search(state, alpha=-np.infty, beta=np.infty, depth=0, is_reversed=False):
+def alpha_beta_search(state, alpha=-999999999, beta=999999999, depth=0, is_reversed=False):
 
     def maxValue(state, alpha, beta):
-        raise NotImplementedError
+        if state.is_terminal(): 
+            return state.val
+        v = -999999999
+        for next_state in state.get_children():
+            v = max(v, minValue(next_state, alpha, beta))
+            if v >= beta:
+                return v
+            alpha = max(alpha, v)
+        return v
 
     def minValue(state, alpha, beta):
-        raise NotImplementedError
+        if state.is_terminal(): 
+            return state.val
+        v = 999999999
+        for next_state in state.get_children():
+            v = min(v, maxValue(next_state, alpha, beta))
+            if v <= alpha:
+                return v
+            beta = min(beta, v)
+        return v
 
     if state.is_terminal(): 
         return state.val
