@@ -174,3 +174,16 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python
+T04/myenv/bin/activate
+T04/myenv/bin/activate.csh
+T04/myenv/bin/activate.fish
+T04/myenv/bin/Activate.ps1
+T04/myenv/bin/f2py
+T04/myenv/bin/pip
+T04/myenv/bin/pip3
+T04/myenv/bin/pip3.9
+T04/myenv/bin/python
+T04/myenv/bin/python3
+T04/myenv/bin/python3.9
+T04/myenv/bin/tabulate
+T04/myenv/pyvenv.cfg

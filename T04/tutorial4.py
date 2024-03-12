@@ -32,17 +32,54 @@ def pd_entropy_c(df, col, c_col, base=2):
 def info_gain(df, Y, X, base=2):
     return pd_entropy(df, Y, base) - pd_entropy_c(df, Y, X, base)
 
-def create_tree(tree, df, parent=None, action = ''):
+info_gain_dicts = []
 
-    info_gain_dicts = []
+def create_tree(tree, df, parent=None, action = ''):
+    
+    if parent == None:
+        info_gain_dicts.clear()
     best_col = None
     best_ig = -np.inf
 
     # Code to determine the best col, remember to skip Decision column.
+    for i in range(len(df.columns) - 1):
+        ig = info_gain(df, 'Decision', df.columns[i])
+        if ig > best_ig and df.columns[i] not in info_gain_dicts:
+            best_ig = ig
+            best_col = df.columns[i]
 
+    ##print(tree.show(stdout=False,  line_type='ascii'))
+    if best_col == None:
+        for value in df[parent].unique():
+            sub_df = df[df[parent] == value]
+            approve = 0
+            reject = 0
+            for i in range(len(sub_df)):
+                if sub_df.iloc[i]['Decision'] == 'Approve':
+                    approve += 1
+                else:
+                    reject += 1
+            string = ""
+            if approve > 0:
+                string += "Approve:" + str(approve)
+            if reject > 0:
+                string += " Reject:" + str(reject)
+            tree.create_node("[" + value + "] " + string, value, parent=parent)
+            
+        return
     tree.create_node(action + best_col, best_col, parent=parent)
+    info_gain_dicts.append(best_col)
     
     # Code to get the next branch of the tree
+    
+    for value in df[best_col].unique():
+        if value == best_col:
+            continue
+        sub_df = df[df[best_col] == value]
+        if pd_entropy(sub_df, 'Decision') != 0:
+            create_tree(tree, sub_df, best_col, "[" + value + "] ")
+        else:
+            tree.create_node("[" + value + "] " + sub_df.iloc[0]['Decision']+":" + str(len(sub_df)), sub_df.iloc[0]['Decision'], parent=best_col)
 
 tree = Tree()
 create_tree(tree, loan_df)
