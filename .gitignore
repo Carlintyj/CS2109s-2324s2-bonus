@@ -201,3 +201,17 @@ T05/myenv/bin/python3
 T05/myenv/bin/python3.9
 T05/myenv/bin/tabulate
 T05/myenv/pyvenv.cfg
+T06/myenv/pyvenv.cfg
+T06/myenv/bin/tabulate
+T06/myenv/bin/python3.9
+T06/myenv/bin/python3
+T06/myenv/bin/python
+T06/myenv/bin/pip3.9
+T06/myenv/bin/pip3
+T06/myenv/bin/pip
+T06/myenv/bin/f2py
+T06/myenv/bin/Activate.ps1
+T06/myenv/bin/activate.fish
+T06/myenv/bin/activate.csh
+T06/myenv/bin/activate
+T06/Commands.rtf
