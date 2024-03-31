@@ -10,7 +10,10 @@ class FconLayer(object):
         self.a_fn = a_fn
         self.has_bias = has_bias
     def __call__(self, X_T):
-        raise NotImplemented
+        if self.has_bias:
+            return self.a_fn(self.W.T @ np.insert(X_T, 0, 1, axis=0))
+        else:
+            return self.a_fn(np.transpose(self.W) @ X_T)
 
 
 l1 = FconLayer(np.array([
@@ -28,7 +31,10 @@ class NNetwork(object):
     def __init__(self, layers):
         self.layers = layers 
     def __call__(self, X):
-        raise NotImplemented # TODO Implement using reduce
+        X_T = X.T
+        for layer in self.layers:
+            X_T = layer(X_T)
+        return X_T.T
 
 nn_q3 = NNetwork([l1, l2])
 x_q3 = np.array([[2,3]])
@@ -57,7 +63,7 @@ nn_q4_noact = NNetwork([ FconLayer(W, lambda x:x, has_bias=False) for i, W in en
 nn_q4_silu = NNetwork([ FconLayer(W, (lambda x:x/(1+np.exp(-x))) if i < 2 else (lambda x:x), has_bias=False) for i, W in enumerate(Ws) ])
 x_q4 = np.array([[1,0], [2,0]])
 
-M = None # TODO Implement this using reduce
+M = reduce(lambda x,y: np.dot(x, y), Ws)
 nn_q4_l1 = NNetwork([ FconLayer(M, lambda x:x, has_bias=False) ])
 
 is_equal = np.allclose(nn_q4_noact(x_q4), nn_q4_l1(x_q4))
